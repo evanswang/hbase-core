@@ -27,9 +27,6 @@ class SQLModule {
             sql.eachRow(assayS.toString(), [resultInstanceId], { row ->
                 patientList.add(row.patient_num)
             })
-            patientList.each { id ->
-                System.err.println("Each patient number is **************************** " + id.toString())
-            }
         } finally {
             sql.close()
         }
@@ -43,8 +40,6 @@ class SQLModule {
         String conceptCD = null
         try {
             // get study name via sql
-            // TODO get concept_id as well to make row-key identified
-            System.err.println("start get study name for **************************** " + ontologyTerm)
             sql = new groovy.sql.Sql(dataSource)
             StringBuilder assayS = new StringBuilder()
             assayS.append("""       SELECT
