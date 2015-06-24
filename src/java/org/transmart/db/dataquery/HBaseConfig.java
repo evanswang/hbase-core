@@ -38,16 +38,13 @@ public class HBaseConfig {
             available = confResourceAsInputStream.available();
         } catch (Exception e) {
             //for debug purpose
-            System.err.println("@wsc got errors when configurating the hbase ***********************");
         } finally {
             IOUtils.closeQuietly(confResourceAsInputStream);
         }
         if (available == 0 ) {
-            System.err.println("@wsc print default hbase config is not available ***********************");
             conf = new Configuration();
             conf.addResource("/data/hadoop-1.0.3/conf/core-site.xml");
             conf.addResource("/data/hbase-0.96.0-hadoop1/conf/hbase-site.xml");
-
         }
         return conf;
     }

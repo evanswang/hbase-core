@@ -59,14 +59,11 @@ public class KVMrnaModule {
     public List<ExpressionRecord> getRecord(String trialName, List<BigDecimal> patientList, String conceptCD) throws IOException {
         long count = 0;
         long ts = System.currentTimeMillis();
-        System.err.println("@wsc is getting records from hbase for study *********************" + trialName + ":" + dataType);
 
         List<ExpressionRecord> results = new ArrayList<ExpressionRecord>();
         for (BigDecimal patientID : patientList) {
             results.addAll(getKV(trialName, patientID, conceptCD));
-            System.out.println("@wsc print ********** result " + count++);
         }
-        System.out.println("@wsc print ********** get time is " + (System.currentTimeMillis() - ts));
         return results;
     }
 
@@ -77,15 +74,10 @@ public class KVMrnaModule {
     public List<ExpressionRecord> getRecord(String trialName, List<BigDecimal> patientList, String conceptCD, List<String> filterList) throws IOException {
         long count = 0;
         long ts = System.currentTimeMillis();
-        System.err.println("@wsc is getting records from hbase for study *********************" + trialName);
-
         List<ExpressionRecord> results = new ArrayList<ExpressionRecord>();
         for (BigDecimal patientID : patientList) {
             results.addAll(getKV(trialName, patientID, conceptCD, filterList, null));
-            System.out.println("@wsc print ********** result " + count++);
         }
-
-        System.out.println("@wsc print ********** get time is " + (System.currentTimeMillis() - ts));
         return results;
     }
 
@@ -95,20 +87,9 @@ public class KVMrnaModule {
      */
     public List<ExpressionRecord> getAllRecords (String trialName, BigDecimal patientID, String conceptCD)
             throws IOException {
-        long count = 0;
-        long ts = System.currentTimeMillis();
-        System.err.println("@wsc getAllRecords is getting records from hbase for study *********************"
-                + trialName + ":" + patientID + ":" + conceptCD + ":" + dataType);
-
-        //List<ExpressionRecord> results = new ArrayList<ExpressionRecord>();
-
         List<ExpressionRecord> result = getKV(trialName, patientID, conceptCD, null, COL_FAMILY_RAW);
         addValue(trialName, patientID, conceptCD, null, COL_FAMILY_LOG, result);
         addValue(trialName, patientID, conceptCD, null, COL_FAMILY_ZSCORE, result);
-        //results.addAll(result);
-        //System.out.println("@wsc print ********** result " + count++);
-
-        //System.out.println("@wsc print ********** get all records time is " + (System.currentTimeMillis() - ts));
         return result;
     }
 
@@ -117,9 +98,7 @@ public class KVMrnaModule {
     }
 
     private List<ExpressionRecord> getKV (String trialName, BigDecimal patientID, String conceptCD, List<String> filterList, String specDataType) throws IOException {
-        System.err.println("@wsc start GET ********************* " + patientID);
         Get g = new Get(Bytes.toBytes(trialName + ":" + patientID.toString() + ":" + conceptCD));
-        //System.err.println("@wsc start specDataType ********************* " + specDataType);
         String family;
         if (specDataType == null) {
             family = dataType;
@@ -144,23 +123,16 @@ public class KVMrnaModule {
         for (Cell cell : r.rawCells()) {
             String patient = Bytes.toString(CellUtil.cloneRow(cell));
             String probeset = Bytes.toString(CellUtil.cloneQualifier(cell));
-            //String gene_probe = Bytes.toString(CellUtil.cloneQualifier(cell));
-            //String gene = gene_probe.substring(0, gene_probe.indexOf(":"));
-            //String probeset = gene_probe.substring(gene_probe.indexOf(":") + 1, gene_probe.length());
             String value = Bytes.toString(CellUtil.cloneValue(cell));
             ExpressionRecord record = new ExpressionRecord(patient, "null", probeset, value);
             record.addValue(family, value);
             result.add(record);
         }
-        if (r.isEmpty())
-            System.out.println("@wsc print ********** no result " + patientID);
         return result;
     }
 
     private void addValue (String trialName, BigDecimal patientID, String conceptCD, List<String> filterList, String specDataType, List<ExpressionRecord> result) throws IOException {
-        System.err.println("@wsc start GET ********************* " + patientID);
         Get g = new Get(Bytes.toBytes(trialName + ":" + patientID.toString() + ":" + conceptCD));
-        //System.err.println("@wsc start specDataType ********************* " + specDataType);
         if (specDataType == null) {
             throw new IOException("@wsc ask to specify dataType");
         } else {

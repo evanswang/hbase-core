@@ -35,10 +35,6 @@ public class KVVcfModule {
         s.addFamily(Bytes.toBytes(COL_FAMILY_POSITION));
         s.setCacheBlocks(true);
         s.setCaching(10000);
-        System.out.println("*************************************");
-        System.out.println("***@wsc print startrow is " + trialName + ":" + patientID + ":");
-        System.out.println("***@wsc print endrow is " + trialName + ":" + (Long.parseLong(patientID + "") + 1) + ":");
-        System.out.println("*************************************");
         s.setStartRow(Bytes.toBytes(trialName + ":" + patientID + ":"));
         s.setStopRow(Bytes.toBytes(trialName + ":" + (Long.parseLong(patientID + "") + 1) + ":"));
         ResultScanner scanner = null;

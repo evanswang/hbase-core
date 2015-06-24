@@ -57,8 +57,6 @@ class SQLModule {
                 studyName = row.sourcesystem_cd
                 conceptCD = row.concept_cd
             })
-            System.err.println("@wsc print study name is **************************** " + studyName.toString()
-                    + "; concept cd is " + conceptCD)
             resultMap.put("study_name", studyName)
             resultMap.put("concept_cd", conceptCD)
         } finally {
@@ -86,13 +84,9 @@ class SQLModule {
                                     search_keyword_id IN ( """ + searchkeyListStr.substring(0, searchkeyListStr.length() - 1) + """ )
                                 AND
                                     rank = 1 """)
-            //System.err.println("@wsc print searchkeyListString ****************** " + searchkeyListStr.substring(0, searchkeyListStr.length() - 1))
             sql.eachRow(assayS.toString(), { row ->
                 geneMap.put(row.search_keyword_id, row.keyword_term)
             })
-            geneMap.keySet().each { id ->
-                System.err.println("@wsc print Each gene is **************************** " + id.toString() + " : " + geneMap.get(id).toString())
-            }
         } finally {
             sql.close()
         }
@@ -117,16 +111,10 @@ class SQLModule {
                                     i2b2demodata.patient_dimension
                                 WHERE
                                     patient_num IN ( """ + patientListStr.substring(0, patientListStr.length() - 1) + """ ) """)
-
-            System.err.println("@wsc print patientListStr ****************** " + patientListStr.substring(0, patientListStr.length() - 1))
             sql.eachRow(assayS.toString(), { row ->
                 String trial = row.sourcesystem_cd.toString()
-                System.err.println("@wsc print patientMap ****************** " + trial.substring(0, trial.indexOf(":")) + ":" + row.patient_num)
                 patientMap.put(row.patient_num, trial.substring(0, trial.indexOf(":")))
             })
-            patientMap.keySet().each { id ->
-                System.err.println("@wsc print Each patient is **************************** " + id.toString() + " : " + patientMap.get(id).toString())
-            }
         } finally {
             sql.close()
         }
@@ -141,7 +129,6 @@ class SQLModule {
      *  WHERE concept_code = '1344440' and patient_id = 1000385063
      */
     public static Map<BigDecimal, AnnotationRecord> getPatientMapping (List<BigDecimal> patientList, String conceptCD) {
-        // TODO
         groovy.sql.Sql sql = null
         def patientMap = [:]
         try {
@@ -162,8 +149,6 @@ class SQLModule {
                                     concept_code = '""" + conceptCD + """'
                                 AND
                                     patient_id IN ( """ + patientListStr.substring(0, patientListStr.length() - 1) + """ ) """)
-
-            System.err.println("@wsc print SQL statement ****************** " + assayS.toString())
             sql.eachRow(assayS.toString(), { row ->
                 AnnotationRecord annotationRecord = new AnnotationRecord()
                 //String studyName = row.sourcesystem_cd.toString()
@@ -178,9 +163,6 @@ class SQLModule {
                 annotationRecord.setSampleCD(row.sample_cd.toString())
                 patientMap.put(row.patient_id, annotationRecord)
             })
-            patientMap.keySet().each { id ->
-                System.err.println("@wsc print Each patient is **************************** " + id.toString() + " : " + patientMap.get(id).toString())
-            }
         } finally {
             sql.close()
         }
