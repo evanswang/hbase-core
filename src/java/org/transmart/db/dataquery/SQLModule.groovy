@@ -123,7 +123,7 @@ class SQLModule {
      *  FROM deapp.de_subject_sample_mapping
      *  WHERE concept_code = '1344440' and patient_id = 1000385063
      */
-    public static Map<BigDecimal, AnnotationRecord> getPatientMapping (List<BigDecimal> patientList, String conceptCD) {
+    public static Map<String, AnnotationRecord> getPatientMapping (List<BigDecimal> patientList, String conceptCD) {
         groovy.sql.Sql sql = null
         def patientMap = [:]
         try {
@@ -156,7 +156,7 @@ class SQLModule {
                 annotationRecord.setTissueType(row.tissue_type.toString())
                 annotationRecord.setGplID(row.gpl_id.toString())
                 annotationRecord.setSampleCD(row.sample_cd.toString())
-                patientMap.put(row.patient_id, annotationRecord)
+                patientMap.put(row.subject_id.toString(), annotationRecord)
             })
         } finally {
             sql.close()
