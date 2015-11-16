@@ -46,7 +46,9 @@ public class KVMrnaModule {
     static String dataType;
 
     public KVMrnaModule(String table, String dataType) throws IOException {
-        config = HBaseConfig.getHConfig();
+        //config = HBaseConfig.getHConfig();
+		// debug simple hbase inst
+		Configuration config = HBaseConfiguration.create();
         MicroarrayTable = new HTable(config, table);
         this.dataType = dataType;
     }
