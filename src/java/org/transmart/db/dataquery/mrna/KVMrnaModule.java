@@ -9,7 +9,6 @@
 package org.transmart.db.dataquery.mrna;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,12 +55,12 @@ public class KVMrnaModule {
      * retrieve data from HBase microarray table
      * @param patientList
      */
-    public List<ExpressionRecord> getRecord(String trialName, List<BigDecimal> patientList, String conceptCD) throws IOException {
+    public List<ExpressionRecord> getRecord(String trialName, List<String> patientList, String conceptCD) throws IOException {
         long count = 0;
         long ts = System.currentTimeMillis();
 
         List<ExpressionRecord> results = new ArrayList<ExpressionRecord>();
-        for (BigDecimal patientID : patientList) {
+        for (String patientID : patientList) {
             results.addAll(getKV(trialName, patientID, conceptCD));
         }
         return results;
@@ -71,11 +70,11 @@ public class KVMrnaModule {
      * retrieve data from HBase microarray table
      * @param patientList
      */
-    public List<ExpressionRecord> getRecord(String trialName, List<BigDecimal> patientList, String conceptCD, List<String> filterList) throws IOException {
+    public List<ExpressionRecord> getRecord(String trialName, List<String> patientList, String conceptCD, List<String> filterList) throws IOException {
         long count = 0;
         long ts = System.currentTimeMillis();
         List<ExpressionRecord> results = new ArrayList<ExpressionRecord>();
-        for (BigDecimal patientID : patientList) {
+        for (String patientID : patientList) {
             results.addAll(getKV(trialName, patientID, conceptCD, filterList, null));
         }
         return results;
@@ -85,7 +84,7 @@ public class KVMrnaModule {
      * retrieve data from HBase microarray table
      *
      */
-    public List<ExpressionRecord> getAllRecords (String trialName, BigDecimal patientID, String conceptCD)
+    public List<ExpressionRecord> getAllRecords (String trialName, String patientID, String conceptCD)
             throws IOException {
         List<ExpressionRecord> result = getKV(trialName, patientID, conceptCD, null, COL_FAMILY_RAW);
         addValue(trialName, patientID, conceptCD, null, COL_FAMILY_LOG, result);
@@ -93,12 +92,12 @@ public class KVMrnaModule {
         return result;
     }
 
-    private List<ExpressionRecord> getKV (String trialName, BigDecimal patientID, String conceptCD) throws IOException {
+    private List<ExpressionRecord> getKV (String trialName, String patientID, String conceptCD) throws IOException {
         return getKV(trialName, patientID, conceptCD, null, null);
     }
 
-    private List<ExpressionRecord> getKV (String trialName, BigDecimal patientID, String conceptCD, List<String> filterList, String specDataType) throws IOException {
-        Get g = new Get(Bytes.toBytes(trialName + ":" + patientID.toString() + ":" + conceptCD));
+    private List<ExpressionRecord> getKV (String trialName, String patientID, String conceptCD, List<String> filterList, String specDataType) throws IOException {
+        Get g = new Get(Bytes.toBytes(trialName + ":" + conceptCD + ":" + patientID.toString()));
         String family;
         if (specDataType == null) {
             family = dataType;
@@ -131,8 +130,8 @@ public class KVMrnaModule {
         return result;
     }
 
-    private void addValue (String trialName, BigDecimal patientID, String conceptCD, List<String> filterList, String specDataType, List<ExpressionRecord> result) throws IOException {
-        Get g = new Get(Bytes.toBytes(trialName + ":" + patientID.toString() + ":" + conceptCD));
+    private void addValue (String trialName, String patientID, String conceptCD, List<String> filterList, String specDataType, List<ExpressionRecord> result) throws IOException {
+        Get g = new Get(Bytes.toBytes(trialName + ":" + conceptCD + ":" + patientID.toString()));
         if (specDataType == null) {
             throw new IOException("@wsc ask to specify dataType");
         } else {
