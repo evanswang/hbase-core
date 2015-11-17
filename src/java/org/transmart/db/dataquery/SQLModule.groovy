@@ -107,8 +107,7 @@ class SQLModule {
                                 WHERE
                                     probe_id IN ( """ + probeListStr.substring(0, probeListStr.length() - 2) + """ )  """)
             sql.eachRow(assayS.toString(), { row ->
-                System.err.println("************** @wsc print ******** " + row.probe_id + " : " + row.gene_symbol + ":" + row.gene_id)
-                geneMap.put(row.probe_id + "", row.gene_symbol + ":" + row.gene_id)
+                geneMap.put(row.probe_id + "", row.gene_symbol + "\t" + row.gene_id)
             })
         } finally {
             sql.close()
