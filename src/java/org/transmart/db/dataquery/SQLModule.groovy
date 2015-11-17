@@ -117,7 +117,7 @@ class SQLModule {
                                 FROM
                                     deapp.de_mrna_annotation
                                 WHERE
-                                    probe_id IN ( """ + probeList.substring(0, probeList.length() - 2) + """ )
+                                    probe_id IN ( """ + probeListStr.substring(0, probeListStr.length() - 2) + """ )
                                 AND
                                     rank = 1 """)
             sql.eachRow(assayS.toString(), { row ->
