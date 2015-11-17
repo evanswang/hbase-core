@@ -91,6 +91,7 @@ public class KVMrnaModule {
         List<ExpressionRecord> result = getKV(trialName, patientID, conceptCD, null, COL_FAMILY_RAW);
         addValue(trialName, patientID, conceptCD, null, COL_FAMILY_LOG, result);
         addValue(trialName, patientID, conceptCD, null, COL_FAMILY_ZSCORE, result);
+        System.err.println("************************ @wsc print result number ++++++++++" + result.size());
         return result;
     }
 
@@ -121,6 +122,7 @@ public class KVMrnaModule {
         List<ExpressionRecord> result = new ArrayList<ExpressionRecord>();
         MicroarrayTable.setScannerCaching(10);
         Result r = MicroarrayTable.get(g);
+        int count = 0;
         for (Cell cell : r.rawCells()) {
             String patient = Bytes.toString(CellUtil.cloneRow(cell));
             String probeset = Bytes.toString(CellUtil.cloneQualifier(cell));
@@ -128,7 +130,9 @@ public class KVMrnaModule {
             ExpressionRecord record = new ExpressionRecord(patient, "null", probeset, value);
             record.addValue(family, value);
             result.add(record);
+            count ++;
         }
+        System.err.println("************************** @wsc print get records *******" + count);
         return result;
     }
 
@@ -163,4 +167,5 @@ public class KVMrnaModule {
             System.out.println("@wsc print ********** no result " + patientID);
     }
 }
+
 
