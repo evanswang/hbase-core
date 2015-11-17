@@ -61,6 +61,7 @@ class SQLModule {
     }
 
     public static Map<String, String> getGeneName (List<String> searchkeyList) {
+        // may need update
         groovy.sql.Sql sql = null
         def geneMap = [:]
         try {
