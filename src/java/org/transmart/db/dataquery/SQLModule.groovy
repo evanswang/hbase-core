@@ -100,18 +100,6 @@ class SQLModule {
             probeList.each {
                 probeListStr.append(it + "','")
             }
-            System.err.println("******************************** @wsc print SQL stats start *****************************")
-            System.err.println(
-                    """   SELECT
-                                    probe_id, gene_symbol, gene_id
-                                FROM
-                                    deapp.de_mrna_annotation
-                                WHERE
-                                    probe_id IN ( """ + probeListStr.substring(0, probeListStr.length() - 2) + """ )
-                                AND
-                                    rank = 1 """
-            )
-            System.err.println("******************************** @wsc print SQL stats end *****************************")
             assayS.append("""   SELECT
                                     probe_id, gene_symbol, gene_id
                                 FROM
@@ -121,7 +109,8 @@ class SQLModule {
                                 AND
                                     rank = 1 """)
             sql.eachRow(assayS.toString(), { row ->
-                geneMap.put(row.probe_id, row.gene_symbol + ":" + row.gene_id)
+                System.err.println("************** @wsc print ******** " + row.probe_id + " : " + row.gene_symbol + ":" + row.gene_id)
+                geneMap.put(row.probe_id + "", row.gene_symbol + ":" + row.gene_id)
             })
         } finally {
             sql.close()
