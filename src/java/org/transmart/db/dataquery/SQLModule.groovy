@@ -96,8 +96,9 @@ class SQLModule {
             sql = new groovy.sql.Sql(dataSource)
             StringBuilder assayS = new StringBuilder()
             StringBuilder probeListStr = new StringBuilder()
+            probeListStr.append("'")
             probeList.each {
-                probeListStr.append(it + ",")
+                probeListStr.append(it + "','")
             }
             System.err.println("******************************** @wsc print SQL stats start *****************************")
             System.err.println(
@@ -106,7 +107,7 @@ class SQLModule {
                                 FROM
                                     deapp.de_mrna_annotation
                                 WHERE
-                                    probe_id IN ( """ + probeListStr.substring(0, probeListStr.length() - 1) + """ )
+                                    probe_id IN ( """ + probeListStr.substring(0, probeListStr.length() - 2) + """ )
                                 AND
                                     rank = 1 """
             )
@@ -116,7 +117,7 @@ class SQLModule {
                                 FROM
                                     deapp.de_mrna_annotation
                                 WHERE
-                                    probe_id IN ( """ + probeList.substring(0, probeList.length() - 1) + """ )
+                                    probe_id IN ( """ + probeList.substring(0, probeList.length() - 2) + """ )
                                 AND
                                     rank = 1 """)
             sql.eachRow(assayS.toString(), { row ->
