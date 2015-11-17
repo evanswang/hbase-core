@@ -88,6 +88,47 @@ class SQLModule {
         return geneMap
     }
 
+    public static Map<String, String> getGeneInfo (List<String> probeList) {
+        groovy.sql.Sql sql = null
+        def geneMap = [:]
+        try {
+            // get gene nick names from search keys
+            sql = new groovy.sql.Sql(dataSource)
+            StringBuilder assayS = new StringBuilder()
+            StringBuilder probeListStr = new StringBuilder()
+            probeList.each {
+                probeListStr.append(it + ",")
+            }
+            System.err.println("******************************** @wsc print SQL stats start *****************************")
+            System.err.println(
+                    """   SELECT
+                                    probe_id, gene_symbol, gene_id
+                                FROM
+                                    deapp.de_mrna_annotation
+                                WHERE
+                                    probe_id IN ( """ + probeList.substring(0, probeList.length() - 1) + """ )
+                                AND
+                                    rank = 1 """
+            )
+            System.err.println("******************************** @wsc print SQL stats end *****************************")
+            assayS.append("""   SELECT
+                                    probe_id, gene_symbol, gene_id
+                                FROM
+                                    deapp.de_mrna_annotation
+                                WHERE
+                                    probe_id IN ( """ + probeList.substring(0, probeList.length() - 1) + """ )
+                                AND
+                                    rank = 1 """)
+            sql.eachRow(assayS.toString(), { row ->
+                geneMap.put(row.probe_id, row.gene_symbol + ":" + row.gene_id)
+            })
+        } finally {
+            sql.close()
+        }
+        return geneMap
+    }
+
+
     //SELECT patient_num, sourcesystem_cd FROM i2b2demodata.patient_dimension WHERE patient_num = ?
     public static Map<BigDecimal, String> getPatientMap (List<BigDecimal> patientList) {
         groovy.sql.Sql sql = null
