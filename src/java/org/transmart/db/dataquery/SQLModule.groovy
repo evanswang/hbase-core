@@ -105,9 +105,7 @@ class SQLModule {
                                 FROM
                                     deapp.de_mrna_annotation
                                 WHERE
-                                    probe_id IN ( """ + probeListStr.substring(0, probeListStr.length() - 2) + """ )
-                                AND
-                                    rank = 1 """)
+                                    probe_id IN ( """ + probeListStr.substring(0, probeListStr.length() - 2) + """ )  """)
             sql.eachRow(assayS.toString(), { row ->
                 System.err.println("************** @wsc print ******** " + row.probe_id + " : " + row.gene_symbol + ":" + row.gene_id)
                 geneMap.put(row.probe_id + "", row.gene_symbol + ":" + row.gene_id)
