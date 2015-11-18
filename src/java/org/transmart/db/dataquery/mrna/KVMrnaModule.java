@@ -175,7 +175,7 @@ public class KVMrnaModule {
             //String patient = Bytes.toString(CellUtil.cloneRow(cell));
             String probeset = Bytes.toString(CellUtil.cloneQualifier(cell));
             //String value = Bytes.toString(CellUtil.cloneValue(cell));
-            result.put(probeset);
+            result.add(probeset);
         }
         return result;
     }
