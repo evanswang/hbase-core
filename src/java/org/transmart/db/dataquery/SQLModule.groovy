@@ -152,6 +152,32 @@ class SQLModule {
         return geneMap
     }
 
+    public static Map<String, String> getGeneSymbol (List<String> probeList) {
+        groovy.sql.Sql sql = null
+        def geneMap = [:]
+        try {
+            // get gene nick names from search keys
+            sql = new groovy.sql.Sql(dataSource)
+            StringBuilder assayS = new StringBuilder()
+            StringBuilder probeListStr = new StringBuilder()
+            probeListStr.append("'")
+            probeList.each {
+                probeListStr.append(it + "','")
+            }
+            assayS.append("""   SELECT
+                                    probe_id, gene_symbol, gene_id
+                                FROM
+                                    deapp.de_mrna_annotation
+                                WHERE
+                                    probe_id IN ( """ + probeListStr.substring(0, probeListStr.length() - 2) + """ )  """)
+            sql.eachRow(assayS.toString(), { row ->
+                geneMap.put(row.probe_id + "", row.gene_symbol + "")
+            })
+        } finally {
+            sql.close()
+        }
+        return geneMap
+    }
 
     //SELECT patient_num, sourcesystem_cd FROM i2b2demodata.patient_dimension WHERE patient_num = ?
     public static Map<BigDecimal, String> getPatientMap (List<BigDecimal> patientList) {

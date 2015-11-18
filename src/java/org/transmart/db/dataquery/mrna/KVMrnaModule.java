@@ -163,6 +163,22 @@ public class KVMrnaModule {
         if (r.isEmpty())
             System.out.println("@wsc print ********** no result " + patientID);
     }
+
+    private List<String> getAllProbeNames (String trialName, String patientID, String conceptCD) throws IOException {
+        Get g = new Get(Bytes.toBytes(trialName + ":" + conceptCD + ":" + patientID.toString()));
+        String family = dataType;
+        g.addFamily(Bytes.toBytes(family));
+        List<String> result = new ArrayList<String>();
+        MicroarrayTable.setScannerCaching(10);
+        Result r = MicroarrayTable.get(g);
+        for (Cell cell : r.rawCells()) {
+            //String patient = Bytes.toString(CellUtil.cloneRow(cell));
+            String probeset = Bytes.toString(CellUtil.cloneQualifier(cell));
+            //String value = Bytes.toString(CellUtil.cloneValue(cell));
+            result.put(probeset);
+        }
+        return result;
+    }
 }
 
 
