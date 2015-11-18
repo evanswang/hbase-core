@@ -11,7 +11,7 @@ class SQLModule {
     static ApplicationContext ctx = org.codehaus.groovy.grails.web.context.ServletContextHolder.getServletContext().getAttribute(org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes.APPLICATION_CONTEXT)
     def static dataSource = ctx.getBean('dataSource')
 
-    public static List<String> getPatients (String resultInstanceId) {
+    public static List<BigDecimal> getPatients (String resultInstanceId) {
         groovy.sql.Sql sql = null
         def patientList = []
         try {
@@ -25,8 +25,8 @@ class SQLModule {
                     WHERE
                     result_instance_id = ? """)
             sql.eachRow(assayS.toString(), [resultInstanceId], { row ->
-                patientList.add(row.patient_num.toString())
-                System.err.println("******************** wsc ************ " + row.patient_num.toString());
+                patientList.add(row.patient_num)
+                System.err.println("******************** wsc ***************** " + row.patient_num.toString());
             })
         } finally {
             sql.close()

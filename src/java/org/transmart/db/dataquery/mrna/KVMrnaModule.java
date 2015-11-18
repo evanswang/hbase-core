@@ -73,6 +73,7 @@ public class KVMrnaModule {
      * @param patientList
      */
     public List<ExpressionRecord> getRecord(String trialName, List<String> patientList, String conceptCD, List<String> filterList) throws IOException {
+        System.err.println("************************ wsc getRecord patients ******** " + patientList.toString());
         long count = 0;
         long ts = System.currentTimeMillis();
         List<ExpressionRecord> results = new ArrayList<ExpressionRecord>();
