@@ -117,7 +117,7 @@ class SQLModule {
                                     s1.rank = 1 """)
             sql.eachRow(assayS.toString(), { row ->
                 // @wsc is it possibe one probe has multiple genes?
-                geneMap.put(probe, gene);
+                geneMap.put(row.probe, row.gene);
             })
         } finally {
             sql.close()
