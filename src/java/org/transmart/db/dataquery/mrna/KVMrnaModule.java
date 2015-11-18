@@ -24,6 +24,7 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.filter.MultipleColumnPrefixFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.transmart.db.dataquery.HBaseConfig;
+import org.apache.commons.lang.StringUtils;
 
 public class KVMrnaModule {
     private static final String COL_FAMILY_RAW = "raw";
@@ -73,7 +74,7 @@ public class KVMrnaModule {
      * @param patientList
      */
     public List<ExpressionRecord> getRecord(String trialName, List<String> patientList, String conceptCD, List<String> filterList) throws IOException {
-        System.err.println("************************ wsc getRecord patients ******** " + patientList.toString());
+        //System.err.println("************************ wsc getRecord patients ******** " + patientList.toString());
         long count = 0;
         long ts = System.currentTimeMillis();
         List<ExpressionRecord> results = new ArrayList<ExpressionRecord>();
@@ -124,6 +125,7 @@ public class KVMrnaModule {
         Result r = MicroarrayTable.get(g);
         for (Cell cell : r.rawCells()) {
             String patient = Bytes.toString(CellUtil.cloneRow(cell));
+            patient = patient.substring(StringUtils.ordinalIndexOf(patient, ":", 2) + 1);
             String probeset = Bytes.toString(CellUtil.cloneQualifier(cell));
             String value = Bytes.toString(CellUtil.cloneValue(cell));
             ExpressionRecord record = new ExpressionRecord(patient, "null", probeset, value);

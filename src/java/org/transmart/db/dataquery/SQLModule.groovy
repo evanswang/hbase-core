@@ -26,7 +26,7 @@ class SQLModule {
                     result_instance_id = ? """)
             sql.eachRow(assayS.toString(), [resultInstanceId], { row ->
                 patientList.add(row.patient_num)
-                System.err.println("******************** wsc ***************** " + row.patient_num.toString());
+                //System.err.println("******************** wsc ***************** " + row.patient_num.toString());
             })
         } finally {
             sql.close()
