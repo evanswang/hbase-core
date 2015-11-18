@@ -90,6 +90,41 @@ class SQLModule {
         return geneMap
     }
 
+    public static Map<String, String> getProbes2GeneMap (List<String> searchkeyList) {
+        // may need update
+        groovy.sql.Sql sql = null
+        def geneMap = [:]
+
+        try {
+            // get gene nick names from search keys
+            sql = new groovy.sql.Sql(dataSource)
+            StringBuilder assayS = new StringBuilder()
+            StringBuilder searchkeyListStr = new StringBuilder()
+            searchkeyList.each {
+                searchkeyListStr.append(it + ",")
+            }
+            assayS.append("""   SELECT
+                                    s1.keyword_term gene, d1.probe_id probe
+                                FROM
+                                    searchapp.search_keyword_term s1
+                                INNER JOIN
+                                    deapp.de_mrna_annotation d1
+                                ON
+                                    s1.keyword_term = d1.gene_symbol
+                                WHERE
+                                    s1.search_keyword_id IN ( """ + searchkeyListStr.substring(0, searchkeyListStr.length() - 1) + """ )
+                                AND
+                                    s1.rank = 1 """)
+            sql.eachRow(assayS.toString(), { row ->
+                // @wsc is it possibe one probe has multiple genes?
+                geneMap.put(probe, gene);
+            })
+        } finally {
+            sql.close()
+        }
+        return geneMap
+    }
+
     public static Map<String, String> getGeneInfo (List<String> probeList) {
         groovy.sql.Sql sql = null
         def geneMap = [:]
