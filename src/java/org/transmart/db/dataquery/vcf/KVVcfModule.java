@@ -26,7 +26,7 @@ public class KVVcfModule {
         VcfTable = new HTable(config, table);
     }
 
-    private void writeAllRecords (PrintWriter pw, String trialName, BigDecimal patientID) throws IOException {
+    private void writeAllRecords (PrintWriter pw, String trialName, String conceptCD, String subjectID) throws IOException {
         // TODO cache result to speed up export
         if (pw == null)
             throw new IOException("@KVVcfModule writeAllRecords complaints that pw is null *******************");
@@ -35,8 +35,8 @@ public class KVVcfModule {
         s.addFamily(Bytes.toBytes(COL_FAMILY_POSITION));
         s.setCacheBlocks(true);
         s.setCaching(10000);
-        s.setStartRow(Bytes.toBytes(trialName + ":" + patientID + ":"));
-        s.setStopRow(Bytes.toBytes(trialName + ":" + (Long.parseLong(patientID + "") + 1) + ":"));
+        s.setStartRow(Bytes.toBytes(trialName + ":" + conceptCD + ":" + subjectID + ":"));
+        s.setStopRow(Bytes.toBytes(trialName + ":" + conceptCD + ":" + (Long.parseLong(subjectID + "") + 1) + ":"));
         ResultScanner scanner = null;
         long count = 0;
         try {
