@@ -17,6 +17,7 @@ import java.math.BigDecimal;
  */
 public class KVVcfModule {
     static final String COL_FAMILY_POSITION = "pos";
+    static final String COL_FAMILY_INFO = "info";
     static Configuration config;
     static HBaseAdmin hadmin;
     static HTable VcfTable;
@@ -34,7 +35,7 @@ public class KVVcfModule {
             throw new IOException("@KVVcfModule writeAllRecords complaints that pw is null *******************");
 
         Scan s = new Scan();
-        s.addFamily(Bytes.toBytes(COL_FAMILY_POSITION));
+        s.addFamily(Bytes.toBytes(COL_FAMILY_INFO));
         s.setCacheBlocks(true);
         s.setCaching(10000);
         s.setStartRow(Bytes.toBytes(trialName + ":" + conceptCD + ":" + subjectID + ":"));
