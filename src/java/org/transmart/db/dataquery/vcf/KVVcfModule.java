@@ -22,7 +22,9 @@ public class KVVcfModule {
     static HTable VcfTable;
 
     public KVVcfModule(String table) throws IOException {
-        config = HBaseConfig.getHConfig();
+        //config = HBaseConfig.getHConfig();
+        // debug simple hbase inst
+        config = HBaseConfiguration.create();
         VcfTable = new HTable(config, table);
     }
 
