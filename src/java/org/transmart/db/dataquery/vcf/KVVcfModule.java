@@ -38,7 +38,13 @@ public class KVVcfModule {
         s.setCacheBlocks(true);
         s.setCaching(10000);
         s.setStartRow(Bytes.toBytes(trialName + ":" + conceptCD + ":" + subjectID + ":"));
-        s.setStopRow(Bytes.toBytes(trialName + ":" + conceptCD + ":" + (Long.parseLong(subjectID + "") + 1) + ":"));
+
+        char lastChar =  subjectID.charAt(subjectID.length() - 1);
+        int nextInt = (int)lastChar + 1;
+        char newChar = (char) nextInt;
+        String nextSubjectID = subjectID.substring(0, subjectID.length() - 1) + newChar;
+
+        s.setStopRow(Bytes.toBytes(trialName + ":" + conceptCD + ":" + nextSubjectID + ":"));
         ResultScanner scanner = null;
         long count = 0;
         try {
