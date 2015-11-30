@@ -57,7 +57,10 @@ public class KVVcfModule {
                 for (Cell kv : rr.rawCells()) {
                     // only the first key should be print
                     if (isFirst) {
-                        pw.print(Bytes.toString(CellUtil.cloneRow(kv)).replaceAll(":", "\t") + "\t");
+                        String[] strs = Bytes.toString(CellUtil.cloneRow(kv)).split(":");
+                        // print row key: trial, subject, chrom and pos.
+                        pw.print(strs[0] + "\t" + strs[2] + "\t" + strs[3] + "\t" + strs[4] + "\t");
+                        //pw.print(Bytes.toString(CellUtil.cloneRow(kv)).replaceAll(":", "\t") + "\t");
                         isFirst = false;
                     }
                     pw.print(Bytes.toString(CellUtil.cloneValue(kv)) + "\t");
